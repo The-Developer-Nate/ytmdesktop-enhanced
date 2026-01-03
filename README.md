@@ -1,13 +1,6 @@
-## Star History
-
-<div align="center">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=venipa/ytmdesktop2&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=venipa/ytmdesktop2&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=venipa/ytmdesktop2&type=Date" />
- </picture>
-</div>
-
+<h1 align="center">
+   This is a fork! The original project is <a href="https://github.com/Venipa/ytmdesktop2">here</a>
+</h1>
 
 <h2 align="center">
     Youtube Music for Desktop (ytmdesktop2)
