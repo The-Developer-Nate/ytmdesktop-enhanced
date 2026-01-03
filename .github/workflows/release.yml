@@ -13,7 +13,7 @@ jobs:
     # Platforms to build on/for
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-13]
+        os: [windows-latest, ubuntu-latest, macos-latest]
         node-version: [22.16.0]
 
     steps:
@@ -89,8 +89,8 @@ jobs:
         continue-on-error: true
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_PROJECT: ytmdesktop
-          SENTRY_ORG: venipa.net
+          SENTRY_PROJECT: ytm-desktop
+          SENTRY_ORG: thedevnate
           SENTRY_DEPLOY_ENVIRONMENT: production
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
           SENTRY_URL: ${{ secrets.SENTRY_URL }}
