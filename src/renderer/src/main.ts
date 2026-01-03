@@ -1,3 +1,10 @@
+if (window.trustedTypes && window.trustedTypes.createPolicy) {
+  window.trustedTypes.createPolicy('default', {
+    createScript: (string) => string, // Allows eval()
+    createHTML: (string) => string    // Allows innerHTML
+  });
+}
+
 import { Logger } from "@shared/utils/console";
 import "non.geist";
 import { createApp } from "vue";
@@ -83,16 +90,26 @@ if (import.meta.env.VITE_SENTRY_DSN) {
 			sendDefaultPii: true,
 			integrations: [
 				Sentry.browserTracingIntegration({ router }),
-				Sentry.replayIntegration()
+				Sentry.replayIntegration({
+					maskAllText: false,
+					blockAllMedia: false,
+				}),
+				Sentry.captureConsoleIntegration()
 			],
 
 			tracesSampleRate: 1.0,
 			tracePropagationTargets: ["localhost"],
 			replaysSessionSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
-			replaysOnErrorSampleRate: 1.0
+			replaysOnErrorSampleRate: 1.0,
+
+			beforeSendLog: (log) => {
+				if (log.level === "info") return null;
+
+				return log;
+			}
 		});
 	} catch {
-		console.warn("Sentry has failed to initialize, server may not be reachable.");
+		console.error("Sentry has failed to initialize!");
 	} finally {
 		console.info("Sentry has been initialized");
 	}

@@ -25,8 +25,9 @@
         <template #label> Discord Status Title </template>
         <template #options>
           <option value="ytm">YouTube Music</option>
-          <option value="artist">Current Song Artist(s)</option>
-          <option value="song">Current Song</option>
+          <option value="artist">Artist(s)</option>
+          <option value="song">Song</option>
+          <option value="songartist">Song by Artist</option>
         </template>
       </settings-select>
     </div>

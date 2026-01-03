@@ -104,25 +104,12 @@ class DiscordRPCManager {
     isAborted: boolean = false,
     tries: number = 0,
   ): Promise<[DiscordClient, Presence] | null> {
-    if (isAborted) {
-      this.logger.debug("creating client aborted", isAborted);
-      this.onError(null);
-      this._createClientAbortController = null;
-      throw new Error("Creating client aborted");
-    }
-    const { signal } =
-      this._createClientAbortController ||
-      (this._createClientAbortController = new AbortController());
-
-    this.logger.debug("creating client", this.clientId, { signal: signal.aborted });
+    this.logger.debug("creating client", this.clientId);
     const client = new DiscordClient({
       clientId: this.clientId,
       transport: {
         type: "ipc",
       },
-    });
-    signal.addEventListener("abort", () => {
-      isAborted = true;
     });
 
     try {
@@ -137,7 +124,6 @@ class DiscordRPCManager {
       this.onConnected();
       await this._refreshActivity(true);
       client.once("disconnected", () => {
-        if (isAborted) return;
         this.logger.error("discord disconnected, trying to reconnect");
         this.onDisconnected();
         if (tries < 3) {
@@ -159,11 +145,6 @@ class DiscordRPCManager {
       this.onError(err as Error);
       return await new Promise((resolve, reject) => {
         setTimeout(() => {
-          if (signal.aborted) {
-            this._createClientAbortController = null;
-            this.onError(null);
-            reject(err);
-          }
           this.createClient(undefined, isAborted).then(resolve).catch(reject);
         }, 2500);
       });
@@ -202,10 +183,17 @@ class DiscordRPCManager {
       this.presence.largeImageKey = presence.largeImageKey;
     } else this.presence.largeImageKey = DEFAULT_PRESENCE.largeImageKey!;
 
+	this.presence.largeImageText = presence.largeImageText ?? DEFAULT_PRESENCE.largeImageText!;
+
     if (this.presence.startTimestamp === null) delete this.presence.startTimestamp;
     if (this.presence.endTimestamp === null) delete this.presence.endTimestamp;
     if (resetUpdateHandle) await this._refreshActivity(false);
     if (!this.client?.user) return;
+
+	if (this.presence.details.length < 2) {
+		this.presence.details = this.presence.details.padEnd(2, ".");
+	}
+
     return await this.client.user?.setActivity(this.presence).catch((err) => {
       this.logger.error(err);
     });
@@ -265,6 +253,8 @@ export default class DiscordProvider extends BaseProvider implements AfterInit {
 			return this.trackService.trackData.video.author;
 		case "song":
 			return this.trackService.trackData.video.title;
+		case "songartist":
+			return `${this.trackService.trackData.video.title} by ${this.trackService.trackData.video.author}`
 	}
 	
 	return "YouTube Music";

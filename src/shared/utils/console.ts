@@ -31,6 +31,7 @@
  */
 
 import format from "date-fns/format";
+import * as Sentry from "@sentry/vue"
 
 /**
  * The possible log levels.
@@ -76,6 +77,7 @@ export class Logger {
 	 * Works the same as console.log().
 	 */
 	debug(...objects: any[]) {
+		Sentry.logger.debug(Sentry.logger.fmt`[${this.source ?? "Unknown"}] ${objects.flat()}`);
 		this.log(console.log, LogLevel.Debug, objects);
 	}
 
@@ -92,6 +94,7 @@ export class Logger {
 	 * Works the same as console.log().
 	 */
 	warn(...objects: any[]) {
+		Sentry.logger.warn(Sentry.logger.fmt`[${this.source ?? "Unknown"}] ${objects.flat()}`);
 		this.log(console.warn, LogLevel.Warning, objects);
 	}
 
@@ -100,6 +103,7 @@ export class Logger {
 	 * Works the same as console.log().
 	 */
 	error(...objects: any[]) {
+		Sentry.logger.error(Sentry.logger.fmt`[${this.source ?? "Unknown"}] ${objects.flat()}`);
 		this.log(console.error, LogLevel.Error, objects);
 	}
 	child(tag: string) {
