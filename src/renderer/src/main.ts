@@ -4,6 +4,8 @@ import { createApp } from "vue";
 import { createRouter, createWebHashHistory } from "vue-router";
 import App from "./App.vue";
 import "./assets/app.scss";
+import * as Sentry from "@sentry/vue";
+
 if (import.meta.env.PROD) Logger.enableProductionMode();
 const router = createRouter({
 	history: createWebHashHistory(),
@@ -68,8 +70,35 @@ const router = createRouter({
 		},
 	],
 });
-console.log({ router });
-createApp(App)
+
+let APP = createApp(App);
+
+if (import.meta.env.VITE_SENTRY_DSN) {
+	try {
+		Sentry.init({
+			app: APP,
+			dsn: import.meta.env.VITE_SENTRY_DSN,
+			enableLogs: true,
+
+			sendDefaultPii: true,
+			integrations: [
+				Sentry.browserTracingIntegration({ router }),
+				Sentry.replayIntegration()
+			],
+
+			tracesSampleRate: 1.0,
+			tracePropagationTargets: ["localhost"],
+			replaysSessionSampleRate: import.meta.env.PROD ? 0.1 : 1.0,
+			replaysOnErrorSampleRate: 1.0
+		});
+	} catch {
+		console.warn("Sentry has failed to initialize, server may not be reachable.");
+	} finally {
+		console.info("Sentry has been initialized");
+	}
+}
+
+APP
 	.use(router)
 	.use((app) => {
 		app.config.globalProperties.window = window;

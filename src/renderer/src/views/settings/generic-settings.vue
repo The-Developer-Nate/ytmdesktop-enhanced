@@ -46,12 +46,6 @@
         </template>
       </div>
       <settings-checkbox config-key="app.autoupdate"> Enable Autoupdate </settings-checkbox>
-      <settings-checkbox config-key="app.enableStatisticsAndErrorTracing">
-        <div class="flex flex-col">
-          <span>Allow reporting of anonymized errors to sentry.io.</span>
-          <span class="opacity-80">(allows for faster bug fixing.)</span>
-        </div>
-      </settings-checkbox>
       <settings-checkbox config-key="app.minimizeTrayOverride">
         Close window to tray instead of quitting
       </settings-checkbox>

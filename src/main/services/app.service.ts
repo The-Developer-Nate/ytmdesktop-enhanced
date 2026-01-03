@@ -1,7 +1,6 @@
 import { version as releaseVersion } from "node:os";
 import { AfterInit, BaseProvider, BeforeStart } from "@main/utils/baseProvider";
 import { IpcContext, IpcHandle, IpcOn } from "@main/utils/onIpcEvent";
-import { setSentryEnabled } from "@main/utils/sentry";
 import { logger } from "@shared/utils/console";
 import { stripUndefined } from "@shared/utils/object";
 import { App, BrowserWindow, IpcMainEvent, IpcMainInvokeEvent, shell } from "electron";
@@ -80,17 +79,6 @@ export default class AppProvider extends BaseProvider implements AfterInit, Befo
 		clearTimeout(this._blurAfkHandle);
 		this._blurAfkHandle = null;
 		if (this.discord.settingsEnabled) this.discord.enable();
-	}
-	@IpcOn("settingsProvider.change", {
-		filter: (key: string) => key === "app.enableStatisticsAndErrorTracing",
-		debounce: 10000,
-	})
-	private __toggleSentryLogging(_key: string, value: boolean) {
-		if (value) {
-			setSentryEnabled(true);
-		} else {
-			setSentryEnabled(false);
-		}
 	}
 	@IpcOn("subwindow.show/settingsWindow")
 	private async __settingsWindowOpen(ev) {

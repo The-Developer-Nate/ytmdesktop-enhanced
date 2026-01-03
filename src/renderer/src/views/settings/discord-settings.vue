@@ -21,6 +21,14 @@
     <div class="px-3 flex flex-col gap-4 mt-4">
       <settings-checkbox config-key="discord.enabled"> Enable Discord </settings-checkbox>
       <settings-checkbox config-key="discord.buttons"> Show Discord Buttons </settings-checkbox>
+      <settings-select config-key="discord.title">
+        <template #label> Discord Status Title </template>
+        <template #options>
+          <option value="ytm">YouTube Music</option>
+          <option value="artist">Current Song Artist(s)</option>
+          <option value="song">Current Song</option>
+        </template>
+      </settings-select>
     </div>
   </div>
 </template>
@@ -28,9 +36,10 @@
 <script lang="ts">
 import SettingsCheckbox from "@renderer/components/SettingsCheckbox.vue";
 import { defineComponent } from "vue";
+import SettingsSelect from "@/components/SettingsSelect.vue";
 
 export default defineComponent({
-	components: { SettingsCheckbox },
+	components: {SettingsSelect, SettingsCheckbox },
 });
 </script>
 

@@ -28,7 +28,6 @@ const defaultSettings = {
 		getstarted: true,
 		enableDev: false,
 		minimizeTrayOverride: false,
-		enableStatisticsAndErrorTracing: true,
 		disableHardwareAccel: false,
 		enableTaskbarProgress: true,
 	},
@@ -46,6 +45,7 @@ const defaultSettings = {
 	discord: {
 		enabled: true,
 		buttons: false,
+		title: "ytm"
 	},
 	customcss: {
 		enabled: true,
